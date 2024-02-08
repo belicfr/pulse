@@ -21,7 +21,7 @@ class FileManagerTest {
         = "File must be undefined.";
 
     private static final String ERROR_FILE_MUST_EXIST
-            = "File must exist.";
+        = "File must exist.";
 
     /**
      * Given: an undefined Pulse file path
