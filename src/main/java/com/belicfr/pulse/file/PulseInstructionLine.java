@@ -49,7 +49,7 @@ public class PulseInstructionLine {
         Matcher splitMatcher;
 
         splitPattern = Pattern.compile(REGEX_LINE_SPLIT);
-        splitMatcher = splitPattern.matcher(this.getLine());
+        splitMatcher = splitPattern.matcher(this.getContent());
 
         parts = new ArrayList<>();
 
@@ -67,7 +67,7 @@ public class PulseInstructionLine {
         int indentUnitCount;
         indentUnitCount = 0;
 
-        for (char character: this.getLine().toCharArray()) {
+        for (char character: this.getContent().toCharArray()) {
             if (character == INDENT_UNIT_CHARACTER) {
                 indentUnitCount++;
             } else {
@@ -92,7 +92,7 @@ public class PulseInstructionLine {
         indentSize = this.getIndentSize();
 
         if (!this.isIndentValid()) {
-            throw new PulseInvalidIndentLevelException(this.getLine());
+            throw new PulseInvalidIndentLevelException(this.getContent());
         }
 
         return indentSize / INDENT_UNIT_SIZE;
@@ -109,7 +109,7 @@ public class PulseInstructionLine {
     /**
      * @return Line content
      */
-    public String getLine() {
+    public String getContent() {
         return this.line;
     }
 
@@ -133,5 +133,10 @@ public class PulseInstructionLine {
     @Override
     public int hashCode() {
         return Objects.hash(line);
+    }
+
+    @Override
+    public String toString() {
+        return this.getContent();
     }
 }
