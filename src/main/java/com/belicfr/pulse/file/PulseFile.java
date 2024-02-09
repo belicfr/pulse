@@ -7,15 +7,6 @@
  * 2024 (c) All rights reserved
  */
 
-/*
- * pulse - PulseFile
- * 02-08-2024
- *
- * belicfr
- * https://github.com/belicfr
- * 2024 (c) All rights reserved
- */
-
 package com.belicfr.pulse.file;
 
 import com.belicfr.pulse.exceptions.PulseUnreadableFileException;
