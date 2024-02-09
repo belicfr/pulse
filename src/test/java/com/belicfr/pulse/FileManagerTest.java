@@ -31,7 +31,7 @@ class FileManagerTest {
      */
     @Test
     void openUndefinedFile() {
-        final String WRONG_PATH = "C:\\test.pulse";
+        final String WRONG_PATH = "azerty";
 
         assertThrows(PulseFileNotFoundException.class, () -> {
             FileManager.openFile(WRONG_PATH);
@@ -46,10 +46,8 @@ class FileManagerTest {
      */
     @Test
     void openExistingFile() {
-        final String PATH = "C:\\Users\\DÉVELOPPEMENT\\Desktop\\pulse-examples\\test.pulse";
-
         assertDoesNotThrow(() -> {
-            FileManager.openFile(PATH);
+            FileManager.openFile(PulseTestLocalEnv.GOOD_PULSE_FILE_PATH);
         }, ERROR_FILE_MUST_EXIST);
     }
 }
