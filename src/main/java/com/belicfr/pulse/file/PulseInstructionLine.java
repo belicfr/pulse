@@ -14,6 +14,8 @@ import com.belicfr.pulse.exceptions.PulseInvalidIndentLevelException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class represents each line of a Pulse source code
@@ -28,17 +30,32 @@ public class PulseInstructionLine {
 
     public static final char INDENT_UNIT_CHARACTER = ' ';
 
+    private static final String REGEX_LINE_SPLIT
+        = "\"[^\"]*\\\"|'[^']*'|[^\\s]+";
+
     private String line;
 
     public PulseInstructionLine(String line) {
         this.line = line;
     }
 
-    public List<String> splitParts() {
+    /**
+     * @return A list composed by split line content
+     */
+    public List<String> getSplitParts() {
         List<String> parts;
+
+        Pattern splitPattern;
+        Matcher splitMatcher;
+
+        splitPattern = Pattern.compile(REGEX_LINE_SPLIT);
+        splitMatcher = splitPattern.matcher(this.getLine());
+
         parts = new ArrayList<>();
 
-        // TODO!
+        while (splitMatcher.find()) {
+            parts.add(splitMatcher.group());
+        }
 
         return parts;
     }
