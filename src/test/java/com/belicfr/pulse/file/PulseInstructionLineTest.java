@@ -14,9 +14,20 @@ import com.belicfr.pulse.exceptions.PulseInvalidIndentLevelException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PulseInstructionLineTest {
+    private static final String ERROR_PIL_PARTS_MUST_BE_EQUALS
+        = "Pulse instruction line parts and local parts list must be equals.";
+
+    private static final String ERROR_PIL_PARTS_MUST_BE_DIFFERENT
+        = "Pulse instruction line parts and local parts list must "
+        + "be different.";
+
     private static final String ERROR_PIL_INDENT_SIZE_IS_RIGHT
         = "Pulse instruction line indent size is good.";
 
@@ -60,7 +71,21 @@ class PulseInstructionLineTest {
         = "        age = 19";
 
     private final static String LINE_WITH_INVALID_INDENT_CONTENT
-            = "   age = 23";
+        = "   age = 23";
+
+    private final static String LINE_CONTENT_WITH_STRING_USING_DOUBLE_QUOTES
+        = "name = \"John\"";
+
+    private final static
+    List<String> LINE_WITH_STRING_PARTS_USING_DOUBLE_QUOTES
+        = Arrays.asList("name", "=", "\"John\"");
+
+    private final static String LINE_CONTENT_WITH_STRING_USING_SIMPLE_QUOTES
+        = "name = 'John'";
+
+    private final static
+    List<String> LINE_WITH_STRING_PARTS_USING_SIMPLE_QUOTES
+        = Arrays.asList("name", "=", "'John'");
 
     private PulseInstructionLine line;
 
@@ -74,6 +99,88 @@ class PulseInstructionLineTest {
         this.indentedLine = new PulseInstructionLine(INDENTED_LINE_CONTENT);
         this.lineWithInvalidIndent
             = new PulseInstructionLine(LINE_WITH_INVALID_INDENT_CONTENT);
+    }
+
+    /**
+     * Given: default Pil and its good parts list
+     * Then:  Pil object parts and local parts list must
+     *        be equals
+     * When:  we use PulseInstruction.line.getSplitParts()
+     *        non-static method
+     */
+    @Test
+    void getSplitPartsWithGoodParts() {
+        List<String> parts;
+        parts = new ArrayList<>();
+        parts.add("test");
+        parts.add("=");
+        parts.add("1");
+
+        assertEquals(parts,
+                     this.line.getSplitParts(),
+                     ERROR_PIL_PARTS_MUST_BE_EQUALS);
+    }
+
+    /**
+     * Given: Pil with string in its line content with
+     *        string using double quotes and its good parts
+     *        list as constants
+     * Then:  Pil object parts and local parts list must
+     *        be equals
+     * When:  we use PulseInstruction.line.getSplitParts()
+     *        non-static method
+     */
+    @Test
+    void getSplitPartsWithGoodPartsWithStringUsingDoubleQuotes() {
+        PulseInstructionLine lineWithString;
+
+        lineWithString = new PulseInstructionLine(
+            LINE_CONTENT_WITH_STRING_USING_DOUBLE_QUOTES);
+
+        assertEquals(LINE_WITH_STRING_PARTS_USING_DOUBLE_QUOTES,
+                     lineWithString.getSplitParts(),
+                     ERROR_PIL_PARTS_MUST_BE_EQUALS);
+    }
+
+    /**
+     * Given: Pil with string in its line content with
+     *        string using simple quotes and its good parts
+     *        list as constants
+     * Then:  Pil object parts and local parts list must
+     *        be equals
+     * When:  we use PulseInstruction.line.getSplitParts()
+     *        non-static method
+     */
+    @Test
+    void getSplitPartsWithGoodPartsWithStringUsingSimpleQuotes() {
+        PulseInstructionLine lineWithString;
+
+        lineWithString = new PulseInstructionLine(
+            LINE_CONTENT_WITH_STRING_USING_SIMPLE_QUOTES);
+
+        assertEquals(LINE_WITH_STRING_PARTS_USING_SIMPLE_QUOTES,
+                     lineWithString.getSplitParts(),
+                     ERROR_PIL_PARTS_MUST_BE_EQUALS);
+    }
+
+    /**
+     * Given: default Pil and a different parts list
+     * Then:  Pil object parts and local parts list must
+     *        be different
+     * When:  we use PulseInstruction.line.getSplitParts()
+     *        non-static method
+     */
+    @Test
+    void getSplitPartsWithWrongParts() {
+        List<String> parts;
+        parts = new ArrayList<>();
+        parts.add("number");
+        parts.add("=");
+        parts.add("1000");
+
+        assertNotEquals(parts,
+                        this.line.getSplitParts(),
+                        ERROR_PIL_PARTS_MUST_BE_DIFFERENT);
     }
 
     /**
@@ -223,6 +330,13 @@ class PulseInstructionLineTest {
                      ERROR_PILS_CONTENT_MUST_BE_EQUALS);
     }
 
+    /**
+     * Given: default Pil
+     * Then:  default and local Pils lines must be
+     *        different
+     * When:  we use PulseInstruction.line.equals()
+     *        non-static method
+     */
     @Test
     void getLineWithWrongLine() {
         final String WRONG_LINE_CONTENT
@@ -233,6 +347,12 @@ class PulseInstructionLineTest {
                         ERROR_PILS_CONTENT_MUST_BE_DIFFERENT);
     }
 
+    /**
+     * Given: two same Pil objects
+     * Then:  both Pils must be equals
+     * When:  we use PulseInstruction.line.equals()
+     *        non-static method
+     */
     @Test
     void equalsWithSameObject() {
         PulseInstructionLine line1,
@@ -244,6 +364,12 @@ class PulseInstructionLineTest {
         assertEquals(line1, line2, ERROR_PIL_MUST_BE_EQUALS);
     }
 
+    /**
+     * Given: local declared Pil and null local Pil object
+     * Then:  both objects must be different
+     * When:  we use PulseInstruction.line.equals()
+     *        non-static method
+     */
     @Test
     void equalsWithNullObject() {
         PulseInstructionLine line1,
@@ -255,6 +381,13 @@ class PulseInstructionLineTest {
         assertNotEquals(line1, line2, ERROR_PIL_MUST_BE_DIFFERENT);
     }
 
+    /**
+     * Given: local Pil object and PulseFile object
+     *        (different classes)
+     * Then:  both objects must be different
+     * When:  we use PulseInstruction.line.equals()
+     *        non-static method
+     */
     @Test
     void equalsWithAnotherClassObject() {
         PulseInstructionLine line;
