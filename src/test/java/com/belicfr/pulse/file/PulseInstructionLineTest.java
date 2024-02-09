@@ -9,6 +9,7 @@
 
 package com.belicfr.pulse.file;
 
+import com.belicfr.pulse.PulseTestLocalEnv;
 import com.belicfr.pulse.exceptions.PulseInvalidIndentLevelException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,12 @@ class PulseInstructionLineTest {
 
     private static final String ERROR_PIL_MUST_BE_EQUALS
         = "Pulse instruction lines must be equals.";
+
+    private static final String ERROR_PIL_MUST_BE_DIFFERENT
+            = "Pulse instruction lines must be different.";
+
+    private static final String ERROR_OBJECTS_HAS_NOT_SAME_CLASS_NAME
+            = "Objects are different class names.";
 
     private static final String LINE_CONTENT
         = "test = 1";
@@ -227,7 +234,36 @@ class PulseInstructionLineTest {
     }
 
     @Test
-    void testEquals() {
-        // TODO
+    void equalsWithSameObject() {
+        PulseInstructionLine line1,
+                             line2;
+
+        line1 = new PulseInstructionLine(LINE_CONTENT);
+        line2 = line1;
+
+        assertEquals(line1, line2, ERROR_PIL_MUST_BE_EQUALS);
+    }
+
+    @Test
+    void equalsWithNullObject() {
+        PulseInstructionLine line1,
+                             line2;
+
+        line1 = new PulseInstructionLine(LINE_CONTENT);
+        line2 = null;
+
+        assertNotEquals(line1, line2, ERROR_PIL_MUST_BE_DIFFERENT);
+    }
+
+    @Test
+    void equalsWithAnotherClassObject() {
+        PulseInstructionLine line;
+
+        PulseFile file;
+
+        line = new PulseInstructionLine(LINE_CONTENT);
+        file = new PulseFile(PulseTestLocalEnv.GOOD_PULSE_FILE_PATH);
+
+        assertNotEquals(line, file, ERROR_OBJECTS_HAS_NOT_SAME_CLASS_NAME);
     }
 }
