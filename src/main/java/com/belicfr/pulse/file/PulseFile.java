@@ -10,6 +10,7 @@
 package com.belicfr.pulse.file;
 
 import com.belicfr.pulse.exceptions.PulseUnreadableFileException;
+import com.belicfr.pulse.heap.Heap;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -23,8 +24,12 @@ public class PulseFile {
     /** File path */
     private String path;
 
+    /** Heap instance associated to current Pulse file */
+    private Heap heap;
+
     public PulseFile(String path) {
         this.path = path;
+        this.heap = new Heap();
     }
 
     /**
@@ -88,5 +93,12 @@ public class PulseFile {
         }
 
         return code;
+    }
+
+    /**
+     * @return Current heap object
+     */
+    public Heap getHeap() {
+        return this.heap;
     }
 }
