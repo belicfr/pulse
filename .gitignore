@@ -2,4 +2,3 @@
 target
 src/main/java/com/belicfr/pulse/Test.java
 src/test/java/com/belicfr/pulse/PulseTestLocalEnv.java
-pom.xml
