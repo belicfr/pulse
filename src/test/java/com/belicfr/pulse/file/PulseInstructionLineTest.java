@@ -326,7 +326,7 @@ class PulseInstructionLineTest {
     @Test
     void getLineWithRightLine() {
         assertEquals(LINE_CONTENT,
-                     this.line.getLine(),
+                     this.line.getContent(),
                      ERROR_PILS_CONTENT_MUST_BE_EQUALS);
     }
 
@@ -343,7 +343,7 @@ class PulseInstructionLineTest {
             = "azerty!";
 
         assertNotEquals(WRONG_LINE_CONTENT,
-                        this.line.getLine(),
+                        this.line.getContent(),
                         ERROR_PILS_CONTENT_MUST_BE_DIFFERENT);
     }
 
