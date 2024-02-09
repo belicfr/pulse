@@ -14,13 +14,13 @@ import com.belicfr.pulse.exceptions.PulseCannotStoreAsGivenTypeException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Integer extends Type {
+public class IntegerType extends Type implements TypeInterface {
     private static final String REGEX_NUMERIC
         = "^([0-9]+)$";
 
     private int value;
 
-    public Integer(String expression)
+    public IntegerType(String expression)
     throws PulseCannotStoreAsGivenTypeException {
         super(expression);
 
@@ -38,20 +38,16 @@ public class Integer extends Type {
     throws PulseCannotStoreAsGivenTypeException {
         if (!isCompatible(this.getExpression())) {
             throw new PulseCannotStoreAsGivenTypeException(
-                this.getExpression(),
-                getClass());
+                this.getExpression(), getClass());
         }
 
-        this.value = java.lang.Integer.getInteger(super.getExpression());
+        this.value = Integer.parseInt(super.getExpression());
     }
 
     /**
-     * @return Current value
+     * @param expression Given expression
+     * @return If given expression is numeric
      */
-    public int getValue() {
-        return this.value;
-    }
-
     public static boolean isCompatible(String expression) {
         Pattern numericPattern;
         Matcher numericMatcher;
@@ -60,5 +56,13 @@ public class Integer extends Type {
         numericMatcher = numericPattern.matcher(expression);
 
         return numericMatcher.matches();
+    }
+
+    /**
+     * @return Current value
+     */
+    @Override
+    public Integer getValue() {
+        return this.value;
     }
 }
