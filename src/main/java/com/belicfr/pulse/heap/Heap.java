@@ -10,12 +10,12 @@
 package com.belicfr.pulse.heap;
 
 import com.belicfr.pulse.lang.types.Type;
+import com.belicfr.pulse.lang.types.TypeInterface;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class Heap {
-    private HashMap<String, Type> register;
+    private HashMap<String, TypeInterface> register;
 
     public Heap() {
         this.register = new HashMap<>();
@@ -24,7 +24,7 @@ public class Heap {
     /**
      * @return Current heap register
      */
-    public HashMap<String, Type> getRegister() {
+    public HashMap<String, TypeInterface> getRegister() {
         return this.register;
     }
 
@@ -34,7 +34,7 @@ public class Heap {
      * @param key
      * @param value
      */
-    public void add(String key, Type value) {
+    public void add(String key, TypeInterface value) {
         this.register.put(key, value);
     }
 }
