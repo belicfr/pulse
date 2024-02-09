@@ -7,19 +7,12 @@
  * 2024 (c) All rights reserved
  */
 
-/*
- * pulse - PulseInstructionLine
- * 02-08-2024
- *
- * belicfr
- * https://github.com/belicfr
- * 2024 (c) All rights reserved
- */
-
 package com.belicfr.pulse.file;
 
 import com.belicfr.pulse.exceptions.PulseInvalidIndentLevelException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -39,6 +32,15 @@ public class PulseInstructionLine {
 
     public PulseInstructionLine(String line) {
         this.line = line;
+    }
+
+    public List<String> splitParts() {
+        List<String> parts;
+        parts = new ArrayList<>();
+
+        // TODO!
+
+        return parts;
     }
 
     /**
