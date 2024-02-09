@@ -11,7 +11,7 @@ package com.belicfr.pulse.lang.types;
 
 import com.belicfr.pulse.exceptions.PulseCannotStoreAsGivenTypeException;
 
-public class Type {
+public class Type implements TypeInterface {
     private String expression;
 
     public Type(String expression)
@@ -33,5 +33,10 @@ public class Type {
      */
     public static boolean isCompatible(String expression) {
         return true;
+    }
+
+    @Override
+    public Object getValue() {
+        return null;
     }
 }
