@@ -9,10 +9,14 @@
 
 package com.belicfr.pulse.lang;
 
+import com.belicfr.pulse.exceptions.PulseCannotStoreAsGivenTypeException;
+import com.belicfr.pulse.exceptions.PulseInvalidInstructionException;
+import com.belicfr.pulse.exceptions.PulseInvalidValueTypeException;
 import com.belicfr.pulse.file.PulseInstructionLine;
 import com.belicfr.pulse.heap.Heap;
-import com.belicfr.pulse.lang.types.Integer;
-import com.belicfr.pulse.lang.types.Type;
+import com.belicfr.pulse.lang.types.IntegerType;
+import com.belicfr.pulse.lang.types.StringType;
+import com.belicfr.pulse.lang.types.TypeInterface;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -31,39 +35,62 @@ public class LineReader {
         this.line     = line;
     }
 
-    public void read() {
-        // Variable definition?
-
-        // TODO...
-    }
-
-    private void variableDefinition() {
-        List<String> lineParts;
-
-
+    public void read()
+    throws PulseCannotStoreAsGivenTypeException,
+           PulseInvalidInstructionException, PulseInvalidValueTypeException {
 
         Pattern variableDefinitionPattern;
-        Matcher variableDefinitionMatcher;
 
-        lineParts = this.getLine().getSplitParts();
+        Matcher readMatcher;
 
         variableDefinitionPattern = Pattern.compile(REGEX_VARIABLE_DEFINITION);
-        variableDefinitionMatcher
-            = variableDefinitionPattern.matcher(this.getLine().toString());
 
-        if (variableDefinitionMatcher.matches()) {
-            this.getFileHeap().add(lineParts.get(0),
-                                   );
+        readMatcher = variableDefinitionPattern.matcher(this.getLine()
+                                                            .toString());
+
+        if (readMatcher.matches()) {
+            this.defineVariable();
         }
+
+        // TODO...
+
     }
 
-    private Class guessType() {
-        String lineContent;
-        lineContent = this.line.getContent();
+    private void defineVariable()
+    throws PulseCannotStoreAsGivenTypeException,
+           PulseInvalidInstructionException,
+           PulseInvalidValueTypeException {
 
-        if (Integer.isCompatible(lineContent)) {
-            return Integer.class;
+        TypeInterface value;
+
+        List<String> lineParts;
+
+        String definitionValue;
+
+        lineParts = this.getLine()
+                        .getSplitParts();
+
+        if (lineParts.size() != 3) {
+            throw new PulseInvalidInstructionException(this.getLine()
+                                                           .getContent());
         }
+
+        definitionValue = lineParts.get(2);
+
+        if (IntegerType.isCompatible(definitionValue)) {
+            value = new IntegerType(definitionValue);
+        } else if (StringType.isCompatible(definitionValue)) {
+            value = new StringType(definitionValue);
+        } else {
+            throw new PulseInvalidValueTypeException(definitionValue);
+        }
+
+        this.getFileHeap()
+            .add(this.getLine()
+                     .getSplitParts()
+                     .get(0),
+                 value);
+
     }
 
     /**
