@@ -10,6 +10,7 @@
 package com.belicfr.pulse.file;
 
 import com.belicfr.pulse.FileManager;
+import com.belicfr.pulse.PulseTestLocalEnv;
 import com.belicfr.pulse.exceptions.PulseFileNotFoundException;
 import com.belicfr.pulse.exceptions.PulseUnreadableFileException;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,9 +22,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PulseFileTest {
-    private static final String PATH
-        = "C:\\Users\\DÉVELOPPEMENT\\Desktop\\pulse-examples\\test.pulse";
-
     private static final String ERROR_FILE_MUST_BE_UNREADABLE
         = "File must be unreadable.";
 
@@ -44,7 +42,7 @@ class PulseFileTest {
     @BeforeEach
     void setUp() {
         try {
-            file = FileManager.openFile(PATH);
+            file = FileManager.openFile(PulseTestLocalEnv.GOOD_PULSE_FILE_PATH);
         } catch (PulseFileNotFoundException | PulseUnreadableFileException e) {
             System.out.println(e.getMessage());
         }
@@ -68,7 +66,9 @@ class PulseFileTest {
      */
     @Test
     void getPath() {
-        assertEquals(this.file.getPath(), PATH, ERROR_WRONG_PATH);
+        assertEquals(this.file.getPath(),
+                     PulseTestLocalEnv.GOOD_PULSE_FILE_PATH,
+                     ERROR_WRONG_PATH);
     }
 
     /**
