@@ -57,7 +57,7 @@ public class PulseInstructionLine {
         parts = new ArrayList<>();
 
         while (splitMatcher.find()) {
-            parts.add(splitMatcher.group());
+            parts.add(splitMatcher.group().trim());
         }
 
         return parts;
