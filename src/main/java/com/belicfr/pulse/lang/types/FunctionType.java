@@ -9,21 +9,30 @@
 
 package com.belicfr.pulse.lang.types;
 
+import com.belicfr.pulse.exceptions.PulseAttemptToGetFunctionValueException;
 import com.belicfr.pulse.exceptions.PulseCannotStoreAsGivenTypeException;
+import com.belicfr.pulse.file.PulseInstructionLine;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FunctionType extends Type implements TypeInterface {
-    private static final String REGEX_FUNCTION
-        = "(?:->\\s*(.*)(?:\\R.*|$))|(\\R.*)";
+    public static final int MINIMUM_LINE_PARTS_COUNT = 2;
 
-    private boolean value;
+    private static final String REGEX_FUNCTION
+        = "(?i)((->)(\\s*)(([a-z])([a-z0-9]*)(\\s*)"
+        + ",(\\s*)*)(([a-z])([a-z0-9]*))?)?";
+
+    private List<PulseInstructionLine> body;
 
     public FunctionType(String expression)
     throws PulseCannotStoreAsGivenTypeException {
         super(expression);
+
+        this.body = new ArrayList<>();
 
         this.store();
     }
@@ -43,12 +52,24 @@ public class FunctionType extends Type implements TypeInterface {
         }
     }
 
+    /**
+     * Attempts to run object function.
+     */
     public void run() {
-        String[] functionBodyLines;
-        functionBodyLines = this.getExpression()
-                                .split("\n");
+        // TODO: run method by getting function body!
+    }
 
-        System.out.println(Arrays.toString(functionBodyLines));
+    /**
+     * @return Function body
+     */
+    public List<PulseInstructionLine> getBody() {
+        return this.body;
+    }
+
+    @Override
+    public Object getValue()
+    throws PulseAttemptToGetFunctionValueException {
+        throw new PulseAttemptToGetFunctionValueException("{undefined}");
     }
 
     /**
