@@ -1,5 +1,5 @@
 /*
- * pulse - Integer
+ * pulse - BooleanType
  * 02/09/2024
  *
  * belicfr

@@ -1,5 +1,5 @@
 /*
- * pulse - Integer
+ * pulse - StringType
  * 02/09/2024
  *
  * belicfr
