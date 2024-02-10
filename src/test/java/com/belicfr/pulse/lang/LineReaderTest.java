@@ -9,6 +9,7 @@
 
 package com.belicfr.pulse.lang;
 
+import com.belicfr.pulse.exceptions.PulseInvalidIndentLevelException;
 import com.belicfr.pulse.exceptions.PulseInvalidInstructionException;
 import com.belicfr.pulse.exceptions.PulseInvalidValueTypeException;
 import com.belicfr.pulse.file.PulseInstructionLine;
@@ -65,7 +66,8 @@ class LineReaderTest {
     }
 
     @Test
-    void readWithInvalidInstructionLine() {
+    void readWithInvalidInstructionLine()
+    throws PulseInvalidIndentLevelException {
         Heap heap;
         LineReader reader;
 
@@ -80,7 +82,8 @@ class LineReaderTest {
     }
 
     @Test
-    void readWithVariableDefinitionInstructionWithIntegerValue() {
+    void readWithVariableDefinitionInstructionWithIntegerValue()
+    throws PulseInvalidIndentLevelException {
         Heap heap;
         LineReader reader;
         String variableKey,
@@ -113,7 +116,8 @@ class LineReaderTest {
     }
 
     @Test
-    void readWithVariableDefinitionInstructionWithStringValue() {
+    void readWithVariableDefinitionInstructionWithStringValue()
+    throws PulseInvalidIndentLevelException {
         Heap heap;
         LineReader reader;
         String variableKey,
@@ -146,7 +150,8 @@ class LineReaderTest {
     }
 
     @Test
-    void readWithVariableDefinitionInstructionWithBooleanValue() {
+    void readWithVariableDefinitionInstructionWithBooleanValue()
+    throws PulseInvalidIndentLevelException {
         Heap heap;
         LineReader reader;
         String variableKey,
@@ -179,7 +184,8 @@ class LineReaderTest {
     }
 
     @Test
-    void readWithVariableDefinitionInstructionWithInvalidValue() {
+    void readWithVariableDefinitionInstructionWithInvalidValue()
+    throws PulseInvalidIndentLevelException {
         Heap heap;
         LineReader reader;
 
@@ -194,7 +200,8 @@ class LineReaderTest {
     }
 
     @Test
-    void readWithVariableDefinitionInstructionWithInvalidInstruction() {
+    void readWithVariableDefinitionInstructionWithInvalidInstruction()
+    throws PulseInvalidIndentLevelException {
         Heap heap;
         LineReader reader;
 
