@@ -31,7 +31,10 @@ public class PulseInstructionLine {
     public static final char INDENT_UNIT_CHARACTER = ' ';
 
     private static final String REGEX_LINE_SPLIT
-        = "\"[^\"]*\"|'[^']*'|[^\\s]+";
+        = "(?i)\\s*(\\+|\\-|\\*|\\/|\\(|\\)"
+          + "|\\^|\\%|\\!|\\&\\&|\\|\\||==|!=|<|>|<="
+        + "|>=|=|\\b(?:true|false|null)\\b|\"(?:\\\\\"|[^\"])*\"|'"
+        + "(?:\\\\'|[^'])*'|\\w+)\\s*";
 
     private String line;
 
