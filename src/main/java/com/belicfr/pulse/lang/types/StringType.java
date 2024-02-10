@@ -41,7 +41,9 @@ public class StringType extends Type implements TypeInterface {
                 this.getExpression(), getClass());
         }
 
-        this.value = String.valueOf(super.getExpression());
+        this.value
+            = super.getExpression()
+                   .substring(1, super.getExpression().length() - 1);
     }
 
     /**
