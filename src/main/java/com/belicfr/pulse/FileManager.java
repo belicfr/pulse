@@ -9,9 +9,10 @@
 
 package com.belicfr.pulse;
 
-import com.belicfr.pulse.exceptions.PulseFileNotFoundException;
-import com.belicfr.pulse.exceptions.PulseUnreadableFileException;
+import com.belicfr.pulse.exceptions.*;
 import com.belicfr.pulse.file.PulseFile;
+import com.belicfr.pulse.file.PulseInstructionLine;
+import com.belicfr.pulse.lang.LineReader;
 
 import java.io.File;
 
@@ -33,7 +34,7 @@ public class FileManager {
      *                                    does no longer
      *                                    exist
      */
-    public static PulseFile openFile(String path)
+    public static PulseFile getPulseFile(String path)
     throws PulseFileNotFoundException, PulseUnreadableFileException {
         File file;
         file = new File(path);
@@ -43,5 +44,25 @@ public class FileManager {
         }
 
         return new PulseFile(path);
+    }
+
+    public static PulseFile runPulseFile(String path)
+    throws PulseFileNotFoundException,
+           PulseUnreadableFileException, PulseInvalidValueTypeException,
+           PulseCannotStoreAsGivenTypeException,
+           PulseInvalidInstructionException {
+
+        PulseFile file;
+        LineReader reader;
+
+        file = getPulseFile(path);
+
+        for (PulseInstructionLine line: file.getCode(true)) {
+            reader = new LineReader(file.getHeap(), line);
+            reader.read();
+        }
+
+        return file;
+
     }
 }
