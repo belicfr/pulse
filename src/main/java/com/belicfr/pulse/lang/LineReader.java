@@ -14,17 +14,19 @@ import com.belicfr.pulse.exceptions.PulseInvalidInstructionException;
 import com.belicfr.pulse.exceptions.PulseInvalidValueTypeException;
 import com.belicfr.pulse.file.PulseInstructionLine;
 import com.belicfr.pulse.heap.Heap;
+import com.belicfr.pulse.lang.types.BooleanType;
 import com.belicfr.pulse.lang.types.IntegerType;
 import com.belicfr.pulse.lang.types.StringType;
 import com.belicfr.pulse.lang.types.TypeInterface;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LineReader {
     private static final String REGEX_VARIABLE_DEFINITION
-        = "([a-z])([a-z0-9]*)(\s*=\s*)(.+)";
+        = "(?i)([a-z])([a-z0-9]*)((\\s*)=(\\s*)(.+))";
 
     private Heap fileHeap;
 
@@ -46,13 +48,14 @@ public class LineReader {
         variableDefinitionPattern = Pattern.compile(REGEX_VARIABLE_DEFINITION);
 
         readMatcher = variableDefinitionPattern.matcher(this.getLine()
-                                                            .toString());
+                                                            .getContent());
 
         if (readMatcher.matches()) {
             this.defineVariable();
+        } else {
+            throw new PulseInvalidInstructionException(
+                this.getLine().getContent());
         }
-
-        // TODO...
 
     }
 
@@ -81,6 +84,8 @@ public class LineReader {
             value = new IntegerType(definitionValue);
         } else if (StringType.isCompatible(definitionValue)) {
             value = new StringType(definitionValue);
+        } else if (BooleanType.isCompatible(definitionValue)) {
+            value = new BooleanType(definitionValue);
         } else {
             throw new PulseInvalidValueTypeException(definitionValue);
         }
