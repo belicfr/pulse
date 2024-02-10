@@ -9,6 +9,7 @@
 
 package com.belicfr.pulse.file;
 
+import com.belicfr.pulse.exceptions.PulseIndentLevelLowException;
 import com.belicfr.pulse.exceptions.PulseInvalidIndentLevelException;
 
 import java.util.ArrayList;
@@ -37,6 +38,8 @@ public class PulseInstructionLine {
         + "(?:\\\\'|[^'])*'|\\w+)\\s*";
 
     private String line;
+
+    private int lineNumber;
 
     public PulseInstructionLine(String line) {
         this.line = line;
@@ -110,10 +113,57 @@ public class PulseInstructionLine {
     }
 
     /**
+     * Remove an indent level from current line.
+     */
+    public void removeIndent()
+    throws PulseInvalidIndentLevelException,
+           PulseIndentLevelLowException {
+
+        if (this.getIndentLevel() < 1) {
+            throw new PulseIndentLevelLowException(this.line);
+        }
+
+        this.line = this.line.substring(INDENT_UNIT_SIZE);
+
+    }
+
+    /**
+     * Remove an indent level from current line.
+     *
+     * @param levelCount Count of level to remove
+     */
+    public void removeIndent(int levelCount)
+    throws PulseInvalidIndentLevelException,
+           PulseIndentLevelLowException {
+
+        if (levelCount > this.getIndentLevel()) {
+            throw new PulseIndentLevelLowException(this.line);
+        }
+
+        this.line = this.line
+                        .substring(INDENT_UNIT_SIZE * levelCount);
+
+    }
+
+    /**
      * @return Line content
      */
     public String getContent() {
         return this.line;
+    }
+
+    /**
+     * @return Line number
+     */
+    public int getLineNumber() {
+        return this.lineNumber;
+    }
+
+    /**
+     * @param lineNumber New line number in file
+     */
+    public void setLineNumber(int lineNumber) {
+        this.lineNumber = lineNumber;
     }
 
     @Override
