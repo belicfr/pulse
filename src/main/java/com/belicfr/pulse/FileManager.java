@@ -15,6 +15,7 @@ import com.belicfr.pulse.file.PulseInstructionLine;
 import com.belicfr.pulse.lang.LineReader;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Pulse system file manager.
@@ -48,18 +49,35 @@ public class FileManager {
 
     public static PulseFile runPulseFile(String path)
     throws PulseFileNotFoundException,
-           PulseUnreadableFileException, PulseInvalidValueTypeException,
+           PulseUnreadableFileException,
+           PulseInvalidValueTypeException,
            PulseCannotStoreAsGivenTypeException,
-           PulseInvalidInstructionException {
+           PulseInvalidInstructionException,
+           PulseInvalidIndentLevelException,
+           PulseAttemptToGetFunctionValueException {
+
+        PulseInstructionLine currentLine;
+
+        List<PulseInstructionLine> fileLines;
 
         PulseFile file;
         LineReader reader;
 
         file = getPulseFile(path);
+        fileLines = file.getCode(false);
 
-        for (PulseInstructionLine line: file.getCode(true)) {
-            reader = new LineReader(file.getHeap(), line);
-            reader.read();
+        for (int lineIndex = 0;
+             lineIndex < fileLines.size();
+             lineIndex++) {
+
+            currentLine = fileLines.get(lineIndex);
+            currentLine.setLineNumber(lineIndex + 1);
+
+            if (!currentLine.getContent().isBlank()) {
+                reader = new LineReader(file.getHeap(), currentLine);
+                reader.read();
+            }
+
         }
 
         return file;
