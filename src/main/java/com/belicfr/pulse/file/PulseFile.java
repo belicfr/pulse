@@ -83,12 +83,16 @@ public class PulseFile {
      * @return Pulse lines objects list
      * @throws PulseUnreadableFileException If file cannot be read
      */
-    public List<PulseInstructionLine> getCode()
+    public List<PulseInstructionLine> getCode(boolean ignoreBlankLines)
     throws PulseUnreadableFileException {
         List<PulseInstructionLine> code;
         code = new ArrayList<>();
 
         for (String line: this.getFileLines()) {
+            if (ignoreBlankLines && line.isBlank()) {
+                continue;
+            }
+
             code.add(new PulseInstructionLine(line));
         }
 
