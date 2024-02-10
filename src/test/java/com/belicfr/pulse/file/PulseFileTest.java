@@ -110,11 +110,11 @@ class PulseFileTest {
         LINES.add(new PulseInstructionLine("age = 19"));
 
         assertDoesNotThrow(() -> {
-            this.file.getCode();
+            this.file.getCode(false);
         }, ERROR_UNREADABLE_FILE);
 
         assertEquals(LINES,
-                     this.file.getCode(),
+                     this.file.getCode(false),
                      ERROR_WRONG_PULSE_INSTRUCTION_LINES_LIST);
     }
 }
