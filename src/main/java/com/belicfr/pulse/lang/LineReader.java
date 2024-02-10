@@ -9,16 +9,13 @@
 
 package com.belicfr.pulse.lang;
 
-import com.belicfr.pulse.exceptions.PulseCannotStoreAsGivenTypeException;
-import com.belicfr.pulse.exceptions.PulseInvalidInstructionException;
-import com.belicfr.pulse.exceptions.PulseInvalidValueTypeException;
+import com.belicfr.pulse.exceptions.*;
 import com.belicfr.pulse.file.PulseInstructionLine;
 import com.belicfr.pulse.heap.Heap;
-import com.belicfr.pulse.lang.types.BooleanType;
-import com.belicfr.pulse.lang.types.IntegerType;
-import com.belicfr.pulse.lang.types.StringType;
-import com.belicfr.pulse.lang.types.TypeInterface;
+import com.belicfr.pulse.lang.types.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -26,10 +23,13 @@ import java.util.regex.Pattern;
 
 public class LineReader {
     private static final String REGEX_VARIABLE_DEFINITION_INSTRUCTION
-        = "(?i)([a-z])([a-z0-9]*)((\\s*)=(\\s*)(.+))";
+        = "(?i)(([a-z])([a-z0-9]*))((\\s*)=(\\s*)(.+))";
+
+    private static final String REGEX_FUNCTION_DEFINITION_INSTRUCTION
+        = "function(\\s+)(([a-z])([a-zA-Z0-9]*))(.*)";
 
     private static final String REGEX_PRINT_INSTRUCTION
-        = "print(\\s*)(.+)";
+        = "print(\\s+)(.+)";
 
     private Heap fileHeap;
 
@@ -37,25 +37,41 @@ public class LineReader {
 
     public LineReader(Heap fileHeap, PulseInstructionLine line) {
         this.fileHeap = fileHeap;
-        this.line     = line;
+        this.line = line;
     }
 
     public void read()
     throws PulseCannotStoreAsGivenTypeException,
-           PulseInvalidInstructionException, PulseInvalidValueTypeException {
+           PulseInvalidInstructionException,
+           PulseInvalidValueTypeException,
+           PulseInvalidIndentLevelException,
+           PulseAttemptToGetFunctionValueException {
+
+        int lineIndentLevel;
 
         String lineContent;
 
         Pattern variableDefinitionPattern,
+                functionDefinitionPattern,
                 printPattern;
 
         Matcher variableDefinitionMatcher,
+                functionDefinitionMatcher,
                 printMatcher;
+
+        lineIndentLevel = this.getLine().getIndentLevel();
+
+        if (lineIndentLevel > 0) {
+            return;
+        }
 
         lineContent = this.getLine().getContent();
 
         variableDefinitionPattern = Pattern.compile(
             REGEX_VARIABLE_DEFINITION_INSTRUCTION);
+
+        functionDefinitionPattern = Pattern.compile(
+            REGEX_FUNCTION_DEFINITION_INSTRUCTION);
 
         printPattern = Pattern.compile(
             REGEX_PRINT_INSTRUCTION);
@@ -63,10 +79,15 @@ public class LineReader {
         variableDefinitionMatcher
             = variableDefinitionPattern.matcher(lineContent);
 
+        functionDefinitionMatcher
+            = functionDefinitionPattern.matcher(lineContent);
+
         printMatcher = printPattern.matcher(lineContent);
 
         if (variableDefinitionMatcher.matches()) {
-            this.defineVariable();
+            this.defineVariable(variableDefinitionMatcher);
+        } else if (functionDefinitionMatcher.matches()) {
+            this.defineFunction(functionDefinitionMatcher);
         } else if (printMatcher.matches()) {
             this.print();
         } else {
@@ -76,10 +97,12 @@ public class LineReader {
 
     }
 
-    private void defineVariable()
+    private void defineVariable(Matcher variableDefinitionMatcher)
     throws PulseCannotStoreAsGivenTypeException,
            PulseInvalidInstructionException,
            PulseInvalidValueTypeException {
+
+        String variableValue;
 
         TypeInterface value;
 
@@ -88,14 +111,14 @@ public class LineReader {
         lineParts = this.getLine()
                         .getSplitParts();
 
-        if (lineParts.size() < 3) {
+        variableValue = variableDefinitionMatcher.group(7);
+
+        if (lineParts.size() < Type.MINIMUM_LINE_PARTS_COUNT) {
             throw new PulseInvalidInstructionException(this.getLine()
                                                            .getContent());
         }
 
-        value = getPulseValue(this.getFileHeap(), this.getLine()
-                                                      .getSplitParts()
-                                                      .get(2));
+        value = getPulseValue(this.getFileHeap(), variableValue);
 
         this.getFileHeap()
             .add(this.getLine()
@@ -105,10 +128,36 @@ public class LineReader {
 
     }
 
+    private void defineFunction(Matcher functionDefinitionMatcher)
+    throws PulseInvalidInstructionException,
+           PulseCannotStoreAsGivenTypeException {
+
+        FunctionType function;
+
+        List<String> lineParts;
+
+        lineParts = this.getLine()
+                        .getSplitParts();
+
+        if (lineParts.size() < FunctionType.MINIMUM_LINE_PARTS_COUNT) {
+            throw new PulseInvalidInstructionException(this.getLine()
+                                                           .getContent());
+        }
+
+        function = new FunctionType(functionDefinitionMatcher.group(5));
+        System.out.println(function);
+
+        this.getFileHeap()
+            .add(functionDefinitionMatcher.group(2),
+                 function);
+
+    }
+
     private void print()
     throws PulseInvalidInstructionException,
            PulseInvalidValueTypeException,
-           PulseCannotStoreAsGivenTypeException {
+           PulseCannotStoreAsGivenTypeException,
+           PulseAttemptToGetFunctionValueException {
 
         TypeInterface value;
 
