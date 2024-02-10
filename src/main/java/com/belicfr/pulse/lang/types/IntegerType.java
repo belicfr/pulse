@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 public class IntegerType extends Type implements TypeInterface {
     private static final String REGEX_NUMERIC
-        = "^([0-9]+)$";
+        = "^(-?)([0-9]+)$";
 
     private int value;
 
