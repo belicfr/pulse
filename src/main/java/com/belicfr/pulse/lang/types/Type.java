@@ -9,13 +9,12 @@
 
 package com.belicfr.pulse.lang.types;
 
-import com.belicfr.pulse.exceptions.PulseCannotStoreAsGivenTypeException;
+public class Type {
+    public static final int MINIMUM_LINE_PARTS_COUNT = 3;
 
-public class Type implements TypeInterface {
     private String expression;
 
-    public Type(String expression)
-    throws PulseCannotStoreAsGivenTypeException {
+    public Type(String expression) {
         this.expression = expression;
     }
 
@@ -23,7 +22,7 @@ public class Type implements TypeInterface {
      * @return Expression associated to current object
      */
     public String getExpression() {
-        return this.expression;
+        return this.expression.trim();
     }
 
     /**
@@ -33,10 +32,5 @@ public class Type implements TypeInterface {
      */
     public static boolean isCompatible(String expression) {
         return true;
-    }
-
-    @Override
-    public Object getValue() {
-        return null;
     }
 }
