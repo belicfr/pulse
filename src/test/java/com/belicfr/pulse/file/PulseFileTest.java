@@ -42,7 +42,7 @@ class PulseFileTest {
     @BeforeEach
     void setUp() {
         try {
-            file = FileManager.openFile(PulseTestLocalEnv.GOOD_PULSE_FILE_PATH);
+            file = FileManager.getPulseFile(PulseTestLocalEnv.GOOD_PULSE_FILE_PATH);
         } catch (PulseFileNotFoundException | PulseUnreadableFileException e) {
             System.out.println(e.getMessage());
         }
@@ -54,7 +54,7 @@ class PulseFileTest {
             = "azerty";
 
         assertThrows(PulseFileNotFoundException.class, () -> {
-            FileManager.openFile(WRONG_PATH);
+            FileManager.getPulseFile(WRONG_PATH);
         }, ERROR_FILE_MUST_BE_UNREADABLE);
     }
 

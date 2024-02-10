@@ -12,8 +12,6 @@ package com.belicfr.pulse;
 import com.belicfr.pulse.exceptions.PulseFileNotFoundException;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileManagerTest {
@@ -34,7 +32,7 @@ class FileManagerTest {
         final String WRONG_PATH = "azerty";
 
         assertThrows(PulseFileNotFoundException.class, () -> {
-            FileManager.openFile(WRONG_PATH);
+            FileManager.getPulseFile(WRONG_PATH);
         }, ERROR_FILE_MUST_BE_UNDEFINED);
     }
 
@@ -47,7 +45,7 @@ class FileManagerTest {
     @Test
     void openExistingFile() {
         assertDoesNotThrow(() -> {
-            FileManager.openFile(PulseTestLocalEnv.GOOD_PULSE_FILE_PATH);
+            FileManager.getPulseFile(PulseTestLocalEnv.GOOD_PULSE_FILE_PATH);
         }, ERROR_FILE_MUST_EXIST);
     }
 }
