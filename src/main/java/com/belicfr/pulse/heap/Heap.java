@@ -9,12 +9,18 @@
 
 package com.belicfr.pulse.heap;
 
+import com.belicfr.pulse.exceptions.PulseAttemptToGetFunctionValueException;
+import com.belicfr.pulse.lang.types.BlockTypeInterface;
+import com.belicfr.pulse.lang.types.FunctionType;
 import com.belicfr.pulse.lang.types.Type;
 import com.belicfr.pulse.lang.types.TypeInterface;
 
 import java.util.HashMap;
 
 public class Heap {
+    private static final String ENTITY_REPRESENTATION_PATTERN
+        = "Pulse:[%s<%s> {%s}]";
+
     private HashMap<String, TypeInterface> register;
 
     public Heap() {
@@ -36,5 +42,21 @@ public class Heap {
      */
     public void add(String key, TypeInterface value) {
         this.register.put(key, value);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder heap;
+        heap = new StringBuilder();
+
+        this.getRegister()
+            .forEach((key, value) -> {
+                heap.append(String.format(ENTITY_REPRESENTATION_PATTERN + '\n',
+                                          value.getClass().getSimpleName(),
+                                          key,
+                                          value));
+            });
+
+        return heap.toString();
     }
 }
