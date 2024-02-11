@@ -6,17 +6,28 @@
 Existing types:
 - string (between " or ')
 - integer
-- boolean
+- boolean (not expression)
 ```text
-name = value
+firstname = "John"
+lastname = 'Doe'
+age = 20
+isAdult = true
 ```
 
 ### Function definition:
-**Warning:** only function header can be defined,
-function body definition is **WIP**.
 ```text
 function name
+    ...
+    
 function name2 -> arg1, arg2
+    ...
+```
+
+### Function call:
+**Warning:** none parameter can be given during function call. 
+Argument usage is **WIP**.
+```text
+:functionName
 ```
 
 ### Console output:
