@@ -9,6 +9,8 @@
 
 package com.belicfr.pulse.lang.types;
 
+import com.belicfr.pulse.file.PulseInstructionLine;
+
 public class Type {
     public static final int MINIMUM_LINE_PARTS_COUNT = 3;
 
@@ -22,7 +24,16 @@ public class Type {
      * @return Expression associated to current object
      */
     public String getExpression() {
-        return this.expression.trim();
+        return this.expression;
+    }
+
+    /**
+     * Appends given line to expression.
+     *
+     * @param line Pil to append
+     */
+    protected void addLineToExpression(PulseInstructionLine line) {
+        this.expression += String.format("\n%s", line.getContent());
     }
 
     /**
