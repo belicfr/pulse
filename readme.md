@@ -15,6 +15,7 @@ isAdult = true
 ```
 
 ### Function definition:
+**Warning:** parameter definition is WIP, it cannot be used.
 ```text
 function name
     ...
