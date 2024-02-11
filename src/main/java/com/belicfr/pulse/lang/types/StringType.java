@@ -46,6 +46,23 @@ public class StringType extends Type implements TypeInterface {
                    .substring(1, super.getExpression().length() - 1);
     }
 
+    public String getExpression() {
+        return super.getExpression().trim();
+    }
+
+    /**
+     * @return Current value
+     */
+    @Override
+    public String getValue() {
+        return this.value;
+    }
+
+    @Override
+    public String toString() {
+        return '"' + this.getValue() + '"';
+    }
+
     /**
      * @param expression Given expression
      * @return If given expression is numeric
@@ -58,13 +75,5 @@ public class StringType extends Type implements TypeInterface {
         numericMatcher = numericPattern.matcher(expression);
 
         return numericMatcher.matches();
-    }
-
-    /**
-     * @return Current value
-     */
-    @Override
-    public String getValue() {
-        return this.value;
     }
 }

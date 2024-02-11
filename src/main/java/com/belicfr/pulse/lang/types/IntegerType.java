@@ -44,6 +44,23 @@ public class IntegerType extends Type implements TypeInterface {
         this.value = Integer.parseInt(super.getExpression());
     }
 
+    public String getExpression() {
+        return super.getExpression().trim();
+    }
+
+    /**
+     * @return Current value
+     */
+    @Override
+    public Integer getValue() {
+        return this.value;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(this.getValue());
+    }
+
     /**
      * @param expression Given expression
      * @return If given expression is numeric
@@ -56,13 +73,5 @@ public class IntegerType extends Type implements TypeInterface {
         numericMatcher = numericPattern.matcher(expression);
 
         return numericMatcher.matches();
-    }
-
-    /**
-     * @return Current value
-     */
-    @Override
-    public Integer getValue() {
-        return this.value;
     }
 }
