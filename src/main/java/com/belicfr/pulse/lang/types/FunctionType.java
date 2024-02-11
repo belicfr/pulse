@@ -9,29 +9,34 @@
 
 package com.belicfr.pulse.lang.types;
 
-import com.belicfr.pulse.exceptions.PulseAttemptToGetFunctionValueException;
-import com.belicfr.pulse.exceptions.PulseCannotStoreAsGivenTypeException;
+import com.belicfr.pulse.exceptions.*;
 import com.belicfr.pulse.file.PulseInstructionLine;
+import com.belicfr.pulse.heap.Heap;
+import com.belicfr.pulse.lang.LineReader;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FunctionType extends Type implements TypeInterface {
+public class FunctionType
+extends Type
+implements TypeInterface, BlockTypeInterface {
     public static final int MINIMUM_LINE_PARTS_COUNT = 2;
 
     private static final String REGEX_FUNCTION
-        = "(?i)((->)(\\s*)(([a-z])([a-z0-9]*)(\\s*)"
-        + ",(\\s*)*)(([a-z])([a-z0-9]*))?)?";
+        = "(?i)((->)(\\s*)(([a-z])([a-z0-9]*)(\\s*),"
+        + "(\\s*))?(([a-z])([a-z0-9]*)))?";
 
-    private List<PulseInstructionLine> body;
+    private final String name;
 
-    public FunctionType(String expression)
+    private final List<PulseInstructionLine> body;
+
+    public FunctionType(String name, String expression)
     throws PulseCannotStoreAsGivenTypeException {
         super(expression);
 
+        this.name = name;
         this.body = new ArrayList<>();
 
         this.store();
@@ -46,7 +51,7 @@ public class FunctionType extends Type implements TypeInterface {
      */
     private void store()
     throws PulseCannotStoreAsGivenTypeException {
-        if (!isCompatible(this.getExpression())) {
+        if (!isCompatible(super.getExpression().trim())) {
             throw new PulseCannotStoreAsGivenTypeException(
                 this.getExpression(), getClass());
         }
@@ -55,8 +60,27 @@ public class FunctionType extends Type implements TypeInterface {
     /**
      * Attempts to run object function.
      */
-    public void run() {
-        // TODO: run method by getting function body!
+    public void run()
+    throws PulseBadIndentException,
+           PulseInvalidValueTypeException,
+           PulseInvalidIndentLevelException,
+           PulseCannotStoreAsGivenTypeException,
+           PulseAttemptToGetFunctionValueException,
+           PulseIndentLevelLowException,
+           PulseInvalidInstructionException,
+           PulseUndefinedEntityException,
+           PulseUnrunnableEntityException {
+
+        Heap heap;
+        heap = new Heap();
+
+        for (PulseInstructionLine line: this.getBody()) {
+            line.removeIndent();
+
+            (new LineReader(heap, line))
+                .read();
+        }
+
     }
 
     /**
@@ -66,10 +90,46 @@ public class FunctionType extends Type implements TypeInterface {
         return this.body;
     }
 
+    /**
+     * Adds Pil to current function body.
+     *
+     * @param line Pil to add
+     */
+    public void addToBody(PulseInstructionLine line) {
+        this.body.add(line);
+        this.addLineToExpression(line);
+    }
+
+    /**
+     * @return Function name
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    public String getExpression() {
+        StringBuilder expression;
+        expression = new StringBuilder();
+
+        for (String line: super.getExpression().split("\n")) {
+            if (!line.isBlank()) {
+                expression.append(line)
+                          .append('\n');
+            }
+        }
+
+        return expression.toString();
+    }
+
     @Override
     public Object getValue()
     throws PulseAttemptToGetFunctionValueException {
         throw new PulseAttemptToGetFunctionValueException("{undefined}");
+    }
+
+    @Override
+    public String toString() {
+        return '\n' + this.getExpression() + '\n';
     }
 
     /**
