@@ -54,7 +54,11 @@ public class FileManager {
            PulseCannotStoreAsGivenTypeException,
            PulseInvalidInstructionException,
            PulseInvalidIndentLevelException,
-           PulseAttemptToGetFunctionValueException {
+           PulseAttemptToGetFunctionValueException,
+           PulseBadIndentException,
+           PulseIndentLevelLowException,
+           PulseUndefinedEntityException,
+           PulseUnrunnableEntityException {
 
         PulseInstructionLine currentLine;
 
