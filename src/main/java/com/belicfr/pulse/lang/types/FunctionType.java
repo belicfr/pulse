@@ -124,7 +124,7 @@ implements TypeInterface, BlockTypeInterface {
     @Override
     public Object getValue()
     throws PulseAttemptToGetFunctionValueException {
-        throw new PulseAttemptToGetFunctionValueException("{undefined}");
+        throw new PulseAttemptToGetFunctionValueException(this.getName());
     }
 
     @Override
