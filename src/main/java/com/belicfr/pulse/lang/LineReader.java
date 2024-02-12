@@ -129,7 +129,7 @@ public class LineReader {
     private void defineVariable(Matcher variableDefinitionMatcher)
     throws PulseCannotStoreAsGivenTypeException,
            PulseInvalidInstructionException,
-           PulseInvalidValueTypeException {
+           PulseUndefinedEntityException {
 
         String variableValue;
 
@@ -226,7 +226,7 @@ public class LineReader {
 
     private void print()
     throws PulseInvalidInstructionException,
-           PulseInvalidValueTypeException,
+           PulseUndefinedEntityException,
            PulseCannotStoreAsGivenTypeException,
            PulseAttemptToGetFunctionValueException {
 
@@ -261,7 +261,7 @@ public class LineReader {
 
     private TypeInterface getPulseValue(String definitionValue)
     throws PulseCannotStoreAsGivenTypeException,
-           PulseInvalidValueTypeException {
+           PulseUndefinedEntityException {
 
         HashMap<String, TypeInterface> heapRegister;
 
@@ -276,7 +276,7 @@ public class LineReader {
         } else if (heapRegister.containsKey(definitionValue)) {
             return heapRegister.get(definitionValue);
         } else {
-            throw new PulseInvalidValueTypeException(definitionValue);
+            throw new PulseUndefinedEntityException(definitionValue);
         }
 
     }
